@@ -5,17 +5,24 @@ var hello;
 var favcolor;
 var nameq;
 
+
+
 function Output() {
+
   input = document.getElementById("TextBar").value;
 
   user.style.width = input.length * 9 + "px";
 
-  user.style.width += Search("m") * 1000 + "px";
+
 
   time = 0;
-  hello = 0;
+  hello = 1;
   favcolor = 0;
   nameq = 0;
+  ipaddress = 0;
+
+      output = "sorry i have no idea what that means";
+
   
   if (Search("hello") > 0) {
     hello = hello + 300;
@@ -31,9 +38,18 @@ function Output() {
     }
       }
   
-  if (Search("who is this")) {
+  if (Search("who is this") > 0) {
     nameq = nameq + 900;
     nameq = nameq / 10;
+  }
+    if (Search("ip address")||
+              Search("IP address") > 0) {
+    ipaddress = ipaddress + 900;
+    ipaddress = ipaddress / 10;
+  }
+  if (Search("IP") > 0) {
+    ipaddress = ipaddress + 100;
+    ipaddress = ipaddress / 2;
   }
   if (Search("what") > 0) {
     time = time * 2 + 100;
@@ -145,11 +161,12 @@ function Output() {
       console.log("hello confidence " + hello)
       console.log("favcolor confidence " + favcolor)
       console.log("nameq confidence " + nameq)
+      console.log("ipaddress confidence " + ipaddress)
 
 /*this organises it, whichever ansewer has the 
 same value as the winner outputs itself, if two
-are the same, so what, it goes in chronilogical order*/
-  winner = Math.max(favcolor, time, hello, nameq);
+are the same, so what, it goes in chronilogical order */
+  winner = Math.max(favcolor, time, hello, nameq, ipaddress);
   console.log(winner);
   if (favcolor == winner) {
       if (favcolor > 80) {
@@ -191,11 +208,20 @@ are the same, so what, it goes in chronilogical order*/
 
 }
 
-  
-
   document.getElementById("user").innerHTML = input;
-  document.getElementById("DrPuddles").innerHTML = output;
   document.getElementById("TextBar").value = "";
+  
+  if (winner == ipaddress) {
+     $.getJSON("https://api.ipify.org?format=json", function (data) {
+         
+        // Setting text of element P with id gfg
+        $("#DrPuddles").html(data.ip + " (:");
+    })
+    DrPuddles.style.width = 120 + "px";
+
+  } else {
+      document.getElementById("DrPuddles").innerHTML = output;
+  }
 }
 
 //finds is the given word is in the input at all
